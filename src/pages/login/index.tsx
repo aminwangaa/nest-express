@@ -23,9 +23,9 @@ const Login: React.FC = (props: any) => {
         wrapperCol: { span: 18 },
     };
 
-    const changeType = useCallback(() => {
-        setType(n => 1 - n)
-    }, [type])
+    // const changeType = useCallback(() => {
+    //     setType(n => 1 - n)
+    // }, [type])
 
     const submit = useCallback(async () => {
         try {
@@ -33,7 +33,7 @@ const Login: React.FC = (props: any) => {
             if (type === 0) { // 登录
                 const res = await login(values)
                 if (res) { // 登录成功  获取到了用户信息
-                    history.push("/function")
+                    history.push("/role")
                 }
             }
             if (type === 1) { // 注册
@@ -81,9 +81,9 @@ const Login: React.FC = (props: any) => {
                         <Input type={"password"} />
                     </FormItem>
                     <div className={styles.btnBox}>
-                        <div onClick={changeType} className={styles.typeBtn}>
-                            {type == 0 ? "注册" : "登录"}
-                        </div>
+                        {/*<div onClick={changeType} className={styles.typeBtn}>*/}
+                        {/*    {type == 0 ? "注册" : "登录"}*/}
+                        {/*</div>*/}
                         <Button onClick={submit}>
                             {type == 1 ? "注册" : "登录"}
                         </Button>

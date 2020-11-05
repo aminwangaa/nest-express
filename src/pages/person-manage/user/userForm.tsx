@@ -1,9 +1,8 @@
-import React, {useState, useCallback, useRef, useImperativeHandle, useMemo} from "react"
-import styles from "./index.module.less"
-import {DatePicker, Form, Input, Button, Select} from "antd"
-import Icon from "../../../components/Icon";
+import React, {useState, useImperativeHandle, useMemo} from "react"
+import {DatePicker, Form, Input, Select} from "antd"
 import {useStores, observer} from "../../../utils/mobx";
 import {ObjectType} from "../../../layout";
+import moment from "moment"
 
 const { Option } = Select
 
@@ -30,6 +29,7 @@ const UserForm = React.forwardRef((props: ObjectType, ref: any) => {
     useMemo(() => {
         (async () => {
             const list = await getRoles()
+            console.log(list)
             const target = list.map((item: any) => ({
                 label: item.name,
                 value: item.id
@@ -55,7 +55,7 @@ const UserForm = React.forwardRef((props: ObjectType, ref: any) => {
             type: "select",
             message: "请选择角色",
             options: roles,
-            default: data.roles || [1]
+            default: (data.roles && data.roles.length > 0 ) ? data.roles.map((item: any) => item.roleId) : []
         },
         {
             label: "性别",
@@ -76,7 +76,7 @@ const UserForm = React.forwardRef((props: ObjectType, ref: any) => {
             required: false,
             type: "date",
             message: "请选择生日",
-            default: data.birthday
+            default: data.birthday ? moment(data.birthday) : null
         },
     ]
 
@@ -108,6 +108,7 @@ const UserForm = React.forwardRef((props: ObjectType, ref: any) => {
         >
             {configs.map((item: Item) => {
                 const initValue = type === "edit" ? item?.default : undefined
+
                 return (
                     <Form.Item
                         key={item.name}

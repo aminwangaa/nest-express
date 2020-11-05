@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo, useRef, useState} from "react"
 import styles from "./index.module.less"
-import { Table, Button, Input, Select, Modal } from "antd"
-import { cloneDeep } from "lodash"
+import { Table, Button, Select, Modal } from "antd"
 import { ObjectType } from "../../../layout";
 import {observer, useStores} from "../../../utils/mobx";
 import UserForm from "./userForm";
 import {getCurrentUser} from "../../../utils/tool";
 import moment from "moment"
+import Edit from "./edit";
 
 const { Option } = Select
 
@@ -30,7 +30,11 @@ const User:React.FC = (props: ObjectType) => {
         {
             title: "角色",
             dataIndex: "roles",
-            key: "roles"
+            key: "roles",
+            render: (roles: any) => {
+                const texts = roles.map((item: {roleId: number, roleName: string}) => item.roleName)
+                return texts.join("、")
+            }
         },
         {
             title: "性别",
@@ -54,11 +58,7 @@ const User:React.FC = (props: ObjectType) => {
             title: "操作",
             dataIndex: "edit",
             key: "edit",
-            render: (val: any, row: any) => {
-                return (
-                    <div>操作</div>
-                )
-            }
+            render: (val: any, row: any) => <Edit data={row} getList={getUserList}  />
         }
     ]
 

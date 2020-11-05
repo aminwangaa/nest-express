@@ -2,6 +2,7 @@ import { observable, action } from 'mobx';
 import axios from "../../../utils/axios"
 import {ObjectType} from "../../../layout";
 import { message } from "antd"
+import moment from "moment"
 
 class UserStore {
     @observable users = [];
@@ -19,9 +20,23 @@ class UserStore {
         try {
             const res = await axios.get("/api/v1/admin/users")
             if (res) {
+                res.data.forEach((item: any) => {
+                    item.birthday = item.birthday ? moment(item.birthday) : null
+                    item.createdAt = item.createdAt ? moment(item.createdAt) : null
+                    item.updateAt = item.updateAt ? moment(item.updateAt) : null
+                })
                 this.users = res.data
                 return res.data
             }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    @action editUser = async (params: ObjectType) => {
+        try {
+            const res = await axios.post("/api/v1/admin/users/edit", params)
+            message.success("编辑成功")
         } catch (e) {
             console.log(e)
         }
