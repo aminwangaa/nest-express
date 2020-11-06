@@ -44,7 +44,7 @@ const SearchBar = (props: SearchBarProps) => {
             return
         }
         searchFn()
-    }, [searchParams])
+    }, [searchParams, init, searchFn])
 
     return (
         <div>

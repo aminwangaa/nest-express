@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef, useImperativeHandle, useMemo } from "react"
+import React, { useState, useCallback, useRef } from "react"
 import styles from "./index.module.less"
-import { Popover, Popconfirm, Modal, Form, Input, Button, Select } from "antd"
+import { Popover, Popconfirm, Modal } from "antd"
 import Icon from "../../../components/Icon";
 import {useStores, observer} from "../../../utils/mobx";
 import MenuForm from "./menuForm";
@@ -16,9 +16,9 @@ const Edit = (props: EditProps) => {
     let formRef: any = useRef()
     const { data, getList } = props
     const color = "#f59a23"
-    const { id, key } = data
+    const { id } = data
     const { powerStore, roleStore } = useStores()
-    const { addChildPower, deletePower } = powerStore
+    const { deletePower } = powerStore
     const { setRolePowers, editRole } = roleStore
 
     const [visible, setVisible] = useState(false)
@@ -28,12 +28,7 @@ const Edit = (props: EditProps) => {
 
     const deleteItem = useCallback(async () => {
         await deletePower(id)
-    }, [])
-
-    const showAddChild = useCallback(() => {
-        setVisible(flag => !flag)
-        setType("addChild")
-    }, [])
+    }, [deletePower, id])
 
     const showEdit = useCallback(() => {
         setVisible(flag => !flag)
@@ -52,7 +47,7 @@ const Edit = (props: EditProps) => {
         await setRolePowers(params)
         await getList()
         setPowerVisible(flag => !flag)
-    }, [])
+    }, [getList])
 
     const onCancel = useCallback(() => {
         setVisible(flag => !flag)
@@ -67,7 +62,7 @@ const Edit = (props: EditProps) => {
         await editRole(params)
         await getList()
         setVisible(flag => !flag)
-    }, [formRef, type])
+    }, [formRef, type, getCurrentUser, id])
 
     return (
         <div className={styles.iconBox}>

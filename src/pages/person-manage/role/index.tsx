@@ -1,9 +1,8 @@
-import React, {useState, useCallback, useRef, useEffect, useMemo} from "react"
+import React, {useState, useCallback, useRef, useMemo} from "react"
 import styles from "./index.module.less"
 import { Table, Modal, Button } from "antd"
 import {useStores, observer} from "../../../utils/mobx";
 import moment from "moment"
-import {ObjectType} from "../../../layout";
 import {getCurrentUser} from "../../../utils/tool";
 import MenuForm from "./menuForm";
 import Edit from "./edit";
@@ -14,8 +13,7 @@ type SearchParams = {
     creator?: string
 }
 
-const PowerManage: React.FC = (props: ObjectType) => {
-    const {} = props
+const PowerManage: React.FC = () => {
     const { roleStore } = useStores()
     const { createRole, data, getRoles } = roleStore
     let formRef = useRef<any>()

@@ -13,12 +13,10 @@ type EditProps = {
 }
 
 const Edit = (props: EditProps) => {
-    const [form]  = Form.useForm()
-    const { validateFields } = form
     let formRef: any = useRef()
     const { data } = props
     const color = "#f59a23"
-    const { id, key } = data
+    const { id } = data
     const [visible, setVisible] = useState(false)
     const [type, setType] = useState("")
     const { powerStore } = useStores()
@@ -26,7 +24,7 @@ const Edit = (props: EditProps) => {
 
     const deleteItem = useCallback(async () => {
         await deletePower(id)
-    }, [])
+    }, [deletePower, id])
 
     const showAddChild = useCallback(() => {
         setVisible(flag => !flag)
@@ -36,10 +34,6 @@ const Edit = (props: EditProps) => {
     const showEdit = useCallback(() => {
         setVisible(flag => !flag)
         setType("edit")
-    }, [])
-
-    const onOk = useCallback(() => {
-
     }, [])
 
     const onCancel = useCallback(() => {
@@ -58,7 +52,7 @@ const Edit = (props: EditProps) => {
             setVisible(flag => !flag)
         }
 
-    }, [formRef, type])
+    }, [formRef, type, addChildPower, id])
 
     return (
         <div className={styles.iconBox}>
@@ -130,7 +124,7 @@ const MenuForm = React.forwardRef((props: any, ref:any) => {
             const lists = await getUsers()
             setUsers(lists)
         })()
-    }, [])
+    }, [getUsers])
 
     const configs = [
         {
@@ -260,8 +254,7 @@ const MenuForm = React.forwardRef((props: any, ref:any) => {
     )
 })
 
-const PowerManage:React.FC = (props: DataProps) => {
-    const {} = props
+const PowerManage:React.FC = () => {
     const { powerStore } = useStores()
     const { createPower, getPowers, data } = powerStore
     let formRef: any = useRef()
@@ -336,17 +329,17 @@ const PowerManage:React.FC = (props: DataProps) => {
             setVisible(flag => !flag)
         }
 
-    }, [formRef])
+    }, [formRef, createPower, getPowers])
 
     const getPowerList = useCallback(async () => {
         await getPowers()
-    }, [])
+    }, [getPowers])
 
     useMemo(() => {
         (async () => {
             await getPowerList()
         })()
-    }, [])
+    }, [getPowerList])
 
     return (
         <div className={styles.playContainer}>

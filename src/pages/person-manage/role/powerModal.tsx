@@ -38,7 +38,7 @@ const PowerModal = (props: PowerModalProps) => {
                 console.log(e)
             }
         })()
-    }, [])
+    }, [getRolePowers, id])
 
     const onCheck = (checkedKeys: any, event: any) => {
         const { checkedNodes } = event

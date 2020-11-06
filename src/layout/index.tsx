@@ -1,4 +1,4 @@
-import React, {ReactNode, useState, useMemo, useCallback, useEffect} from "react"
+import React, {useState, useMemo, useCallback, useEffect} from "react"
 import { Layout, Menu, Breadcrumb } from 'antd';
 import RouteList from "../route"
 import { withRouter } from "react-router"
@@ -40,7 +40,7 @@ const PageLayout: React.FC = (props: ObjectType) => {
     // 菜单栏状态 收起 true | 展开 false
     const [collapsed, setCollapsed] = useState<boolean>(false)
     // 主题 暂时没用
-    const [theme, setTheme] = useState<themeType>("dark")
+    const [theme] = useState<themeType>("dark")
     const [keyPath, setKeyPath] = useState<Array<string>>(["roleManage", "personManage"])
     const [crumb, setCrumb] = useState<Array<string>>(["personManage", "roleManage"])
     const [key, setKey] = useState<string>("roleManage")
@@ -54,7 +54,7 @@ const PageLayout: React.FC = (props: ObjectType) => {
             setKeyPath(menu.keyPath)
             setCrumb(menu.keyPath.reverse())
         }
-    }, [])
+    }, [getMenu])
 
     useMemo(() => {
         // 如果没有token 未登录 跳转登录页面
@@ -62,7 +62,7 @@ const PageLayout: React.FC = (props: ObjectType) => {
         if (!token) {
             history.push("/login")
         }
-    }, [])
+    }, [getToken, history])
 
     useEffect(() => {
         localStorage.setItem("lastUrl", location.pathname)

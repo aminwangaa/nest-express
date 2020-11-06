@@ -1,10 +1,8 @@
-import React, {useCallback, useState, useMemo} from "react"
+import React, { useCallback, useState } from "react"
 import styles from "./index.module.less"
-import {ObjectType} from "../../layout";
 import { Form, Input, Button } from "antd"
 import { useStores } from "../../utils/mobx";
 import { withRouter } from "react-router"
-import { getLastUrl } from "../../utils/tool";
 
 const FormItem = Form.Item
 
@@ -16,7 +14,7 @@ const Login: React.FC = (props: any) => {
     const { login, register, exit, getUser } = loginStore
 
     // 0 登录 1 注册
-    const [type, setType] = useState<number>(0)
+    const [type] = useState<number>(0)
 
     const layout = {
         labelCol: { span: 5 },

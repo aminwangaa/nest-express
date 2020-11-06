@@ -37,7 +37,7 @@ const UserForm = React.forwardRef((props: ObjectType, ref: any) => {
                 setRoles(target)
             }
         })()
-    }, [])
+    }, [getRoles])
 
     const configs: Item[] = [
         {

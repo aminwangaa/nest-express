@@ -1,6 +1,5 @@
 import React from "react"
-import { Route, Switch, Redirect, withRouter } from "react-router"
-import { compose } from "redux"
+import { Route, Switch, Redirect } from "react-router"
 import SuspenseWrapper from "./utils/suspenseWrapper";
 import Login from "./pages/login";
 

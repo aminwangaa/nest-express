@@ -9,7 +9,7 @@ class UserStore {
 
     @action createUser = async (params: ObjectType) => {
         try {
-            const res = await axios.post("/api/v1/admin/users", params)
+            await axios.post("/api/v1/admin/users", params)
             message.success("创建成功")
         } catch (e) {
             console.log(e)
@@ -35,7 +35,7 @@ class UserStore {
 
     @action editUser = async (params: ObjectType) => {
         try {
-            const res = await axios.post("/api/v1/admin/users/edit", params)
+            await axios.post("/api/v1/admin/users/edit", params)
             message.success("编辑成功")
         } catch (e) {
             console.log(e)

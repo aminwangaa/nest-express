@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef, useImperativeHandle, useMemo } from "react"
+import React, { useState, useCallback, useRef } from "react"
 import styles from "./index.module.less"
-import { Popover, Popconfirm, Modal, Form, Input, Button, Select } from "antd"
+import { Popover, Popconfirm, Modal } from "antd"
 import Icon from "../../../components/Icon";
 import {useStores, observer} from "../../../utils/mobx";
 import UserForm from "./userForm";
@@ -38,7 +38,7 @@ const Edit = (props: EditProps) => {
             await getList()
         }
         setVisible(flag => !flag)
-    }, [formRef, type])
+    }, [formRef, type, getList, id, editUser])
 
     return (
         <div className={styles.iconBox}>

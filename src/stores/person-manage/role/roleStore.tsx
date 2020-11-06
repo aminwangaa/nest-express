@@ -3,13 +3,6 @@ import axios from "../../../utils/axios"
 import {ObjectType} from "../../../layout";
 import { message } from "antd"
 
-type Roles = {
-    createId: number
-    creator: string
-    key: string
-    [key: string]: any
-}
-
 type RolesData = {
     page: number
     pageSize: number

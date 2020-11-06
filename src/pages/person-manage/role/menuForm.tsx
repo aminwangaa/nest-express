@@ -1,8 +1,6 @@
-import React, {useState, useCallback, useRef, useImperativeHandle, useMemo} from "react"
-import styles from "./index.module.less"
-import {Table, Popconfirm, Modal, Form, Input, Button, Select} from "antd"
-import Icon from "../../../components/Icon";
-import {useStores, observer} from "../../../utils/mobx";
+import React, { useImperativeHandle } from "react"
+import { Form, Input } from "antd"
+import { observer } from "../../../utils/mobx";
 
 const MenuForm = React.forwardRef((props: any, ref: any) => {
     const [form] = Form.useForm()

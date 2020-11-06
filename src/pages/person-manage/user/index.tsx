@@ -1,17 +1,12 @@
 import React, {useCallback, useMemo, useRef, useState} from "react"
 import styles from "./index.module.less"
-import { Table, Button, Select, Modal } from "antd"
-import { ObjectType } from "../../../layout";
+import { Table, Button, Modal } from "antd"
 import {observer, useStores} from "../../../utils/mobx";
 import UserForm from "./userForm";
-import {getCurrentUser} from "../../../utils/tool";
 import moment from "moment"
 import Edit from "./edit";
 
-const { Option } = Select
-
-const User:React.FC = (props: ObjectType) => {
-    const {} = props
+const User:React.FC = () => {
     const { userStore } = useStores()
     const { getUsers, users, createUser } = userStore
     let formRef: any = useRef()
