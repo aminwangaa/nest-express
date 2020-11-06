@@ -10,8 +10,15 @@ type Roles = {
     [key: string]: any
 }
 
+type RolesData = {
+    page: number
+    pageSize: number
+    roles: any[]
+    total: number
+}
+
 class roleStore {
-    @observable data = [];
+    @observable data: any[] = [];
 
     @action createRole = async (params: ObjectType) => {
         try {
@@ -33,9 +40,11 @@ class roleStore {
 
     @action getRoles = async (params: ObjectType) => {
         try {
-            const res = await axios.get("/api/v1/admin/roles/list", params)
-            this.data = res
-            return res
+            const res: RolesData = await axios.get("/api/v1/admin/roles/list", params)
+            if (res) {
+                this.data = res.roles
+                return res
+            }
         } catch (e) {
             console.log(e)
         }

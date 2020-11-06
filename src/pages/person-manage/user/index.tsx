@@ -73,6 +73,7 @@ const User:React.FC = (props: ObjectType) => {
         if (params) {
             console.log(params)
             await createUser(params)
+            await getUserList()
             setVisible(flag => !flag)
         }
     }, [formRef])

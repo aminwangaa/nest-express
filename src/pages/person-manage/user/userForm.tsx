@@ -28,13 +28,14 @@ const UserForm = React.forwardRef((props: ObjectType, ref: any) => {
 
     useMemo(() => {
         (async () => {
-            const list = await getRoles()
-            console.log(list)
-            const target = list.map((item: any) => ({
-                label: item.name,
-                value: item.id
-            }))
-            setRoles(target)
+            const res = await getRoles()
+            if (res && res.roles) {
+                const target = res.roles.map((item: any) => ({
+                    label: item.name,
+                    value: item.id
+                }))
+                setRoles(target)
+            }
         })()
     }, [])
 

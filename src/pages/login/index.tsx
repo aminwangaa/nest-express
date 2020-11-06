@@ -33,6 +33,7 @@ const Login: React.FC = (props: any) => {
             if (type === 0) { // 登录
                 const res = await login(values)
                 if (res) { // 登录成功  获取到了用户信息
+                    console.log(res.powerKeys.join("、"), "权限码")
                     history.push("/role")
                 }
             }

@@ -14,6 +14,7 @@ class LoginStore {
             const res = await axios.post("/api/v1/admin/login", params)
             localStorage.setItem("token", res.token)
             if (res) {
+                console.log(res)
                 localStorage.setItem("currentUser", JSON.stringify(res))
             }
             return res

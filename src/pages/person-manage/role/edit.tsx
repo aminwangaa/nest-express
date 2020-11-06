@@ -5,6 +5,7 @@ import Icon from "../../../components/Icon";
 import {useStores, observer} from "../../../utils/mobx";
 import MenuForm from "./menuForm";
 import PowerModal from "./powerModal";
+import {getCurrentUser} from "../../../utils/tool";
 
 type EditProps = {
     data: any
@@ -59,7 +60,10 @@ const Edit = (props: EditProps) => {
 
     const handleSubmit = useCallback(async () => {
         const params = await formRef.current!.handleSubmit()
+        const user = getCurrentUser()
         params.id = id
+        params.creator = user.username
+        params.createId = user.id
         await editRole(params)
         await getList()
         setVisible(flag => !flag)
