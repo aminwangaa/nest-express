@@ -1,11 +1,9 @@
 import React, { useState, useCallback, useRef } from "react"
 import styles from "./index.module.less"
-import { Popover, Popconfirm, Modal } from "antd"
+import { Popconfirm, Modal } from "antd"
 import Icon from "../../../components/Icon";
 import {useStores, observer} from "../../../utils/mobx";
-import UserForm from "./userForm";
-import moment from "moment"
-import {getCurrentUser} from "../../../utils/tool";
+import MenuForm from "./menuForm";
 
 type EditProps = {
     data: any
@@ -17,13 +15,20 @@ const Edit = (props: EditProps) => {
     const { data, getList } = props
     const color = "#f59a23"
     const { id } = data
-    const { userStore } = useStores()
-    const { editUser } = userStore
-
-    const user = getCurrentUser()
-
     const [visible, setVisible] = useState(false)
     const [type, setType] = useState("")
+    const { powerStore } = useStores()
+    const { addChildPower, deletePower } = powerStore
+
+    const deleteItem = useCallback(async () => {
+        await deletePower(id)
+        await getList()
+    }, [deletePower, id, getList])
+
+    const showAddChild = useCallback(() => {
+        setVisible(flag => !flag)
+        setType("addChild")
+    }, [])
 
     const showEdit = useCallback(() => {
         setVisible(flag => !flag)
@@ -36,33 +41,36 @@ const Edit = (props: EditProps) => {
 
     const handleSubmit = useCallback(async () => {
         const params = await formRef.current!.handleSubmit()
-        params.id = id
-        params.createId = user.id
-        params.creator = user.username
-        params.birthday = moment(params.birthday).valueOf()
-        await editUser(params)
-        if (getList) {
-            await getList()
+        if (params) {
+            if (type === "addChild") {
+                params.fatherId = id
+            } else {
+                params.id = id
+            }
+            addChildPower(params, type)
+            setVisible(flag => !flag)
         }
-        setVisible(flag => !flag)
-    }, [formRef, type, getList, id, editUser])
+
+    }, [formRef, type, addChildPower, id])
 
     return (
         <div className={styles.iconBox}>
             <>
-                <Popover content={"用户编辑"}>
-                    <span>
-                        <Icon
-                            className={"amin-edit"}
-                            color={color}
-                            onClick={showEdit}
-                        />
-                    </span>
-                </Popover>
+                <Icon
+                    className={"amin-tianjiaziji"}
+                    color={color}
+                    onClick={showAddChild}
+                />
+                <span className={styles.iconLine}/>
+                <Icon
+                    className={"amin-edit"}
+                    color={color}
+                    onClick={showEdit}
+                />
                 <span className={styles.iconLine}/>
                 <Popconfirm
-                    title="是否删除该用户?"
-                    // onConfirm={deleteItem}
+                    title="是否删除该菜单?"
+                    onConfirm={deleteItem}
                     okText="是"
                     cancelText="否"
                     placement="topRight"
@@ -74,7 +82,7 @@ const Edit = (props: EditProps) => {
             </>
 
             <Modal
-                title={"修改用户信息"}
+                title={type === "edit" ? '编辑' : "添加子级"}
                 visible={visible}
                 onOk={handleSubmit}
                 onCancel={onCancel}
@@ -82,7 +90,7 @@ const Edit = (props: EditProps) => {
                 cancelText={"取消"}
                 key={~~visible}
             >
-                <UserForm
+                <MenuForm
                     type={type}
                     data={data}
                     ref={formRef}

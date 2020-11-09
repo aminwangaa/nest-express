@@ -11,6 +11,8 @@ type PowerModalProps = {
 
 type RolePowers = {keys: string[], ids: number[]}
 
+type Powers = { powers: any[], total: number }
+
 const PowerModal = (props: PowerModalProps) => {
     const title = "分配权限"
     const okText = "确认"
@@ -29,8 +31,8 @@ const PowerModal = (props: PowerModalProps) => {
     useMemo(() => {
         (async () => {
             try {
-                const res: any[] = await getPowers()
-                setPowers(res)
+                const res: Powers = await getPowers()
+                setPowers(res.powers)
                 const rolePowers: RolePowers = await getRolePowers(id)
                 setCheckedKeys(rolePowers.keys)
                 setCheckedData(rolePowers.ids)

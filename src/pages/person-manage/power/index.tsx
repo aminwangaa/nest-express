@@ -1,258 +1,20 @@
-import React, { useState, useCallback, useRef, useImperativeHandle, useMemo } from "react"
+import React, { useState, useCallback, useRef, useMemo } from "react"
 import styles from "./index.module.less"
-import { Table, Popconfirm, Modal, Form, Input, Button, Select } from "antd"
-import Icon from "../../../components/Icon";
+import { Table, Modal, Button } from "antd"
 import {useStores, observer} from "../../../utils/mobx";
+import MenuForm from "./menuForm";
+import Edit from "./edit";
+import SearchBar, {SearchConfig} from "../../../components/searchBar";
 
-const { Option } = Select
-
-type DataProps = {[key: string]: any}
-
-type EditProps = {
-    data: any
+type SearchParams = {
+    powerName?: string
+    creator?: string
+    key?: string
+    link?: string
+    icon?: string
+    weight?: string
+    type?: number
 }
-
-const Edit = (props: EditProps) => {
-    let formRef: any = useRef()
-    const { data } = props
-    const color = "#f59a23"
-    const { id } = data
-    const [visible, setVisible] = useState(false)
-    const [type, setType] = useState("")
-    const { powerStore } = useStores()
-    const { addChildPower, deletePower } = powerStore
-
-    const deleteItem = useCallback(async () => {
-        await deletePower(id)
-    }, [deletePower, id])
-
-    const showAddChild = useCallback(() => {
-        setVisible(flag => !flag)
-        setType("addChild")
-    }, [])
-
-    const showEdit = useCallback(() => {
-        setVisible(flag => !flag)
-        setType("edit")
-    }, [])
-
-    const onCancel = useCallback(() => {
-        setVisible(flag => !flag)
-    }, [])
-
-    const handleSubmit = useCallback(async () => {
-        const params = await formRef.current!.handleSubmit()
-        if (params) {
-            if (type === "addChild") {
-                params.fatherId = id
-            } else {
-                params.id = id
-            }
-            addChildPower(params, type)
-            setVisible(flag => !flag)
-        }
-
-    }, [formRef, type, addChildPower, id])
-
-    return (
-        <div className={styles.iconBox}>
-            <>
-                <Icon
-                    className={"amin-tianjiaziji"}
-                    color={color}
-                    onClick={showAddChild}
-                />
-                <span className={styles.iconLine}/>
-                <Icon
-                    className={"amin-edit"}
-                    color={color}
-                    onClick={showEdit}
-                />
-                <span className={styles.iconLine}/>
-                <Popconfirm
-                    title="是否删除该菜单?"
-                    onConfirm={deleteItem}
-                    okText="是"
-                    cancelText="否"
-                    placement="topRight"
-                >
-                <span>
-                    <Icon className={"amin-delete"} color={color} />
-                </span>
-                </Popconfirm>
-            </>
-
-            <Modal
-                title={type === "edit" ? '编辑' : "添加子级"}
-                visible={visible}
-                onOk={handleSubmit}
-                onCancel={onCancel}
-                okText={"确认"}
-                cancelText={"取消"}
-                key={~~visible}
-            >
-                <MenuForm
-                    type={type}
-                    data={data}
-                    ref={formRef}
-                />
-            </Modal>
-        </div>
-    )
-}
-
-type User = {
-    id: number,
-    username: string,
-    [key: string]: any
-}
-
-const MenuForm = React.forwardRef((props: any, ref:any) => {
-    const [form]  = Form.useForm()
-    const { validateFields } = form
-    const { type, data } = props
-    const { powerStore } = useStores()
-    const { getUsers } = powerStore
-    const TYPES = new Map()
-    TYPES.set(1, "菜单")
-    TYPES.set(2, "功能")
-
-    const [users, setUsers] = useState<Array<User>>([])
-
-    useMemo(() => {
-        (async () => {
-            const lists = await getUsers()
-            setUsers(lists)
-        })()
-    }, [getUsers])
-
-    const configs = [
-        {
-            label: "权限名称",
-            name: "name",
-            required: true,
-            message: "请填写菜单名称",
-            default: data.name
-        },
-        {
-            label: "key",
-            name: "key",
-            required: true,
-            message: "请填写key",
-            default: data.key
-        },
-        {
-            label: "链接",
-            name: "link",
-            required: false,
-            message: "",
-            default: data.link
-        },
-        {
-            label: "图标",
-            name: "icon",
-            required: false,
-            message: "",
-            default: data.icon
-        },
-        {
-            label: "权重",
-            name: "weight",
-            required: true,
-            message: "请填写权重",
-            default: data.weight
-        },
-        {
-            label: "类型",
-            name: "type",
-            required: true,
-            message: "请填写权重",
-            default: data.type,
-            type: "select",
-            options: [
-                { label: "菜单", value: "1"},
-                { label: "功能", value: "2"},
-            ]
-        },
-        {
-            label: "创建者",
-            name: "createId",
-            required: true,
-            message: "请选择创建者",
-            default: ~~data.createId,
-            options: users,
-            type: "select"
-        },
-    ]
-
-    const layout = {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 18 },
-    };
-
-    const handleSubmit = async () => {
-        const { fatherId = 0 } = data
-        try {
-            const params = await validateFields()
-            const user = users.find(i => i.value === params.createId)
-            params.fatherId = fatherId
-            if (user) {
-                params.creator = user.label
-            }
-            return params
-        } catch (err) {
-            const { errorFields } = err
-            console.log(errorFields)
-        }
-    }
-
-    useImperativeHandle(ref, () => ({
-        handleSubmit: async () => {
-            return await handleSubmit();
-        }
-    }));
-
-    return (
-        <Form
-            {...layout}
-            form={form}
-            scrollToFirstError={true}
-        >
-            {configs.map(item => {
-                const initValue = type === "edit" ? item?.default : null
-                return (
-                    <Form.Item
-                        key={item.name}
-                        name={item.name}
-                        label={item.label}
-                        rules={[{
-                            required: item.required,
-                            message: item.message
-                        }]}
-                        initialValue={initValue}
-                    >
-                        {
-                            item?.type === "select" ?
-                                (
-                                    <Select>
-                                        {[...item.options].map((i: any, t: number) => (
-                                            <Option
-                                                value={i.value}
-                                                key={t}
-                                            >
-                                                {i.label}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                ) : (
-                                    <Input />
-                                )}
-                    </Form.Item>
-                )
-            })}
-        </Form>
-    )
-})
 
 const PowerManage:React.FC = () => {
     const { powerStore } = useStores()
@@ -309,42 +71,143 @@ const PowerManage:React.FC = () => {
             width: 120,
             render: (val: any, row: any) => {
                 return (
-                    <Edit data={row} />
+                    <Edit data={row} getList={getPowerList} />
                 )
             }
         }
     ];
 
+    const [total, setTotal] = useState<number>(0)
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [currentPageSize, setCurrentPageSize] = useState<number>(10)
+    const [searchParams, setSearchParams] = useState<SearchParams>({})
+    const [visible, setVisible] = useState(false)
+
     const addPowerShow = () => {
         setVisible(flag => !flag)
     }
-
-    const [visible, setVisible] = useState(false)
 
     const handleSubmit = useCallback(async () => {
         const params = await formRef.current!.handleSubmit()
         if (params) {
             await createPower(params)
-            await getPowers()
+            setCurrentPage(() => 1)
             setVisible(flag => !flag)
+            await getPowerList()
         }
 
-    }, [formRef, createPower, getPowers])
+    }, [formRef, createPower])
 
     const getPowerList = useCallback(async () => {
-        await getPowers()
-    }, [getPowers])
+        // 处理参数
+        let params = {
+            page: currentPage,
+            pageSize: currentPageSize,
+            ...searchParams
+        }
+        // 获取角色列表
+        const res = await getPowers(params)
+        if (res) {
+            // 设置total page pageSize
+            setTotal(res.total)
+
+        }
+    }, [currentPage, currentPageSize, searchParams])
 
     useMemo(() => {
+        // 监听 查询条件 页码 页大小的变化 请求数据
         (async () => {
             await getPowerList()
         })()
-    }, [getPowerList])
+    }, [currentPage, currentPageSize, searchParams, getPowerList])
+
+    // 页码 页大小设置
+    const pageChange = useCallback(async (page, pageSize) => {
+        setCurrentPage(page)
+        setCurrentPageSize(pageSize)
+    }, [])
+
+    // 搜索条件设置  页码设置为1
+    const onSearch = useCallback((params) => {
+        setSearchParams(() => ({...params}))
+        setCurrentPage(1)
+    }, [searchParams])
+
+    const configs: SearchConfig[] = [
+        {
+            label: "权限名称",
+            code: "powerName",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入权限名称"
+        },
+        {
+            label: "创建者",
+            code: "creator",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入创建者"
+        },
+        {
+            label: "key",
+            code: "key",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入key"
+        },
+        {
+            label: "链接",
+            code: "link",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入链接"
+        },
+        {
+            label: "图标",
+            code: "icon",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入图标"
+        },
+        {
+            label: "权重",
+            code: "weight",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入权重"
+        },
+        {
+            label: "类型",
+            code: "type",
+            type: "select",
+            options: [
+                { label: "菜单", value: 1 },
+                { label: "功能", value: 2 },
+            ],
+            required: false,
+            message: "",
+            placeholder: "请选择类型"
+        },
+    ]
 
     return (
         <div className={styles.playContainer}>
-            <Button onClick={addPowerShow}>添加权限</Button>
-            <Button onClick={getPowerList}>获取权限</Button>
+            <SearchBar onSearch={onSearch} configs={configs}/>
+            <div className={styles.addBtnBox}>
+                <Button
+                    type={"primary"}
+                    onClick={addPowerShow}
+                    className={styles.addBtn}
+                >
+                    创建权限
+                </Button>
+            </div>
             <Modal
                 title={"添加一级权限"}
                 visible={visible}
@@ -363,7 +226,13 @@ const PowerManage:React.FC = () => {
             <Table
                 columns={columns}
                 dataSource={data}
-                pagination={false}
+                rowKey={"id"}
+                pagination={{
+                    total: total,
+                    pageSize: currentPageSize,
+                    current: currentPage,
+                    onChange: pageChange
+                }}
             />
         </div>
     )

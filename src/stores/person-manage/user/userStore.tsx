@@ -18,15 +18,15 @@ class UserStore {
 
     @action getUsers = async (params: ObjectType) => {
         try {
-            const res = await axios.get("/api/v1/admin/users")
+            const res = await axios.get("/api/v1/admin/users", params)
             if (res) {
                 res.data.forEach((item: any) => {
-                    item.birthday = item.birthday ? moment(item.birthday) : null
+                    item.birthday = item.birthday ? moment(Number(item.birthday)) : null
                     item.createdAt = item.createdAt ? moment(item.createdAt) : null
                     item.updateAt = item.updateAt ? moment(item.updateAt) : null
                 })
                 this.users = res.data
-                return res.data
+                return res
             }
         } catch (e) {
             console.log(e)

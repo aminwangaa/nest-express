@@ -31,6 +31,16 @@ class roleStore {
         }
     }
 
+    @action deleteRole = async (id: number) => {
+        const params = { id }
+        try {
+            const res = await axios.post("/api/v1/admin/roles/delete", params)
+            message.success(res)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     @action getRoles = async (params: ObjectType) => {
         try {
             const res: RolesData = await axios.get("/api/v1/admin/roles/list", params)

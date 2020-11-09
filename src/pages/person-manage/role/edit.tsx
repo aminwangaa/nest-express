@@ -17,9 +17,8 @@ const Edit = (props: EditProps) => {
     const { data, getList } = props
     const color = "#f59a23"
     const { id } = data
-    const { powerStore, roleStore } = useStores()
-    const { deletePower } = powerStore
-    const { setRolePowers, editRole } = roleStore
+    const { roleStore } = useStores()
+    const { setRolePowers, editRole, deleteRole } = roleStore
 
     const [visible, setVisible] = useState(false)
     const [type, setType] = useState("")
@@ -27,8 +26,9 @@ const Edit = (props: EditProps) => {
 
 
     const deleteItem = useCallback(async () => {
-        await deletePower(id)
-    }, [deletePower, id])
+        await deleteRole(id)
+        await getList()
+    }, [deleteRole, id, getList])
 
     const showEdit = useCallback(() => {
         setVisible(flag => !flag)

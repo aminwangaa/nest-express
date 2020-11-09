@@ -11,16 +11,18 @@ import SearchBar, {SearchConfig} from "../../../components/searchBar";
 type SearchParams = {
     roleName?: string
     creator?: string
+    key?: string
+    description?: string
 }
 
-const PowerManage: React.FC = () => {
+const RoleManage: React.FC = () => {
     const { roleStore } = useStores()
     const { createRole, data, getRoles } = roleStore
     let formRef = useRef<any>()
 
     const [total, setTotal] = useState<number>(0)
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const [currentPageSize, setCurrentPageSize] = useState<number>(5)
+    const [currentPageSize, setCurrentPageSize] = useState<number>(10)
     const [searchParams, setSearchParams] = useState<SearchParams>({})
     const [visible, setVisible] = useState(false)
 
@@ -93,8 +95,6 @@ const PowerManage: React.FC = () => {
         if (res) {
             // 设置total page pageSize
             setTotal(res.total)
-            setCurrentPage(res.page)
-            setCurrentPageSize(res.pageSize)
         }
     }, [currentPage, currentPageSize, searchParams])
 
@@ -103,7 +103,7 @@ const PowerManage: React.FC = () => {
         (async () => {
             await getPowerList()
         })()
-    }, [currentPage, currentPageSize, searchParams])
+    }, [currentPage, currentPageSize, searchParams, getPowerList])
 
     // 页码 页大小设置
     const pageChange = useCallback(async (page, pageSize) => {
@@ -133,14 +133,37 @@ const PowerManage: React.FC = () => {
             required: false,
             message: "",
             placeholder: "请输入创建者"
+        },
+        {
+            label: "key",
+            code: "key",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入key"
+        },
+        {
+            label: "角色描述",
+            code: "description",
+            type: "text",
+            required: false,
+            message: "",
+            placeholder: "请输入角色描述"
         }
     ]
 
     return (
         <div className={styles.playContainer}>
-            <Button onClick={addRoleShow}>添加角色</Button>
-            <Button onClick={getPowerList}>获取角色</Button>
             <SearchBar onSearch={onSearch} configs={configs}/>
+            <div className={styles.addBtnBox}>
+                <Button
+                    type={"primary"}
+                    onClick={addRoleShow}
+                    className={styles.addBtn}
+                >
+                    创建角色
+                </Button>
+            </div>
             <Modal
                 title={"添加角色"}
                 visible={visible}
@@ -171,6 +194,6 @@ const PowerManage: React.FC = () => {
     )
 }
 
-export default observer(PowerManage)
+export default observer(RoleManage)
 
 

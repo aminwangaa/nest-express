@@ -22,11 +22,13 @@ class powerStore {
         }
     }
 
-    @action getPowers = async () => {
+    @action getPowers = async (params: ObjectType) => {
         try {
-            const res =  await axios.get("/api/v1/admin/power/list")
-            this.data = res
-            return res
+            const res =  await axios.get("/api/v1/admin/power/list", params)
+            if (res) {
+                this.data = res.powers
+                return res
+            }
         } catch (e) {
             console.log(e)
             message.error("服务器列表获取失败")
@@ -36,12 +38,10 @@ class powerStore {
     @action addChildPower = async (params: any, type: string) => {
         if (type === "addChild") {
             await this.createPower(params)
-            await this.getPowers()
         }
         if (type === "edit") {
             try {
                 const res = await axios.post("/api/v1/admin/power/edit", params)
-                await this.getPowers()
                 message.success(res)
             } catch (e) {
                 console.log(e)
@@ -54,7 +54,6 @@ class powerStore {
     @action deletePower = async (id: number) => {
         try {
             const res = await axios.post("/api/v1/admin/power/del", { id })
-            await this.getPowers()
             message.success(res)
         } catch (e) {
             console.log(e)

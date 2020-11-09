@@ -170,8 +170,8 @@ const MenuForm = React.forwardRef((props: any, ref:any) => {
             default: data.type,
             type: "select",
             options: [
-                { label: "菜单", value: "1"},
-                { label: "功能", value: "2"},
+                { label: "菜单", value: 1 },
+                { label: "功能", value: 2 },
             ]
         },
         {
@@ -194,6 +194,7 @@ const MenuForm = React.forwardRef((props: any, ref:any) => {
         const { fatherId = 0 } = data
         try {
             const params = await validateFields()
+            console.log(params)
             const user = users.find(i => i.value === params.createId)
             params.fatherId = fatherId
             if (user) {
