@@ -55,7 +55,7 @@ const Edit = (props: EditProps) => {
 
     const handleSubmit = useCallback(async () => {
         const params = await formRef.current!.handleSubmit()
-        const user = getCurrentUser()
+        const user = getCurrentUser() || {}
         params.id = id
         params.creator = user.username
         params.createId = user.id

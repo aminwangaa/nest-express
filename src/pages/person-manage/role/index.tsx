@@ -72,7 +72,7 @@ const RoleManage: React.FC = () => {
     const handleSubmit = useCallback(async () => {
         // 获取menuForm组件验证后的数据
         const params = await formRef.current!.handleSubmit()
-        const user = getCurrentUser()
+        const user = getCurrentUser() || {}
         if (params) {
             params.createId = user.id
             params.creator = user.username

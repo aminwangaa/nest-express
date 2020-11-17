@@ -8,8 +8,20 @@
 }
 
 .header {
-  padding: 0;
-  background: skyblue
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 12px;
+  background: skyblue;
+}
+
+.avatar {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .content {
@@ -26,4 +38,16 @@
 
 .crumbItem {
   cursor: pointer;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.line {
+  height: 1px;
+  width: 100%;
+  background: #e0e0e0;
 }

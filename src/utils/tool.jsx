@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react"
+import { useRef, useEffect, useCallback } from "react"
 
 export const getToken = () => {
     return localStorage.getItem("token")
@@ -9,7 +9,11 @@ export const getLastUrl = () => {
 }
 
 export const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("currentUser"))
+    const user = JSON.parse(JSON.stringify(localStorage.getItem("currentUser")))
+    if (user) {
+        return JSON.parse(user)
+    }
+    return {}
 }
 
 export function useDebounce(fn, delay, dep = []) {

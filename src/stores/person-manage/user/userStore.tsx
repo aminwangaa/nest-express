@@ -35,8 +35,14 @@ class UserStore {
 
     @action editUser = async (params: ObjectType) => {
         try {
-            await axios.post("/api/v1/admin/users/edit", params)
-            message.success("编辑成功")
+            const res: { code: number, msg: string, user: any } =
+                await axios.post("/api/v1/admin/users/edit", params)
+            if (res.code === 200) {
+                message.success(res.msg)
+            } else {
+                message.error(res.msg)
+            }
+            return res
         } catch (e) {
             console.log(e)
         }

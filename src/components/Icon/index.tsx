@@ -3,7 +3,7 @@ import "./index.less"
 
 interface IconProps {
     className: string
-    color: string
+    color?: string
     cursor?: string
     onClick?: () => void
 }

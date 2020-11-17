@@ -32,7 +32,9 @@ const Login: React.FC = (props: any) => {
                 const res = await login(values)
                 if (res) { // 登录成功  获取到了用户信息
                     console.log(res.powerKeys.join("、"), "权限码")
-                    history.push("/role")
+                    setTimeout(() => {
+                        history.push("/role")
+                    })
                 }
             }
             if (type === 1) { // 注册
@@ -45,8 +47,7 @@ const Login: React.FC = (props: any) => {
 
     const exitClick = useCallback(async () => {
         try {
-            const res = await exit()
-            console.log(res)
+            await exit()
         } catch (e) {
             console.log(e)
         }

@@ -20,7 +20,7 @@ const Edit = (props: EditProps) => {
     const { userStore } = useStores()
     const { editUser } = userStore
 
-    const user = getCurrentUser()
+    const user = getCurrentUser() || {}
 
     const [visible, setVisible] = useState(false)
     const [type, setType] = useState("")
@@ -38,9 +38,10 @@ const Edit = (props: EditProps) => {
         const params = await formRef.current!.handleSubmit()
         params.id = id
         params.createId = user.id
-        params.creator = user.username
+        // params.creator = user.username
         params.birthday = moment(params.birthday).valueOf()
         await editUser(params)
+
         if (getList) {
             await getList()
         }

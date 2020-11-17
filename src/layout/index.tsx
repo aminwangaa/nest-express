@@ -4,9 +4,11 @@ import RouteList from "../route"
 import { withRouter } from "react-router"
 import styles from "./index.module.less"
 import menus, { MenuProps, Menus } from "./menu"
-import { getToken } from "../utils/tool";
+import {getCurrentUser, getToken} from "../utils/tool";
+import Header from "./header";
+import { isEmpty } from "lodash"
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 type themeType = "dark" | "light" | undefined
@@ -35,7 +37,6 @@ const getMenu = (target: string, type: "code" | "path"): MenuProps | any => {
 }
 
 const PageLayout: React.FC = (props: ObjectType) => {
-
     const { history, location } = props
     // 菜单栏状态 收起 true | 展开 false
     const [collapsed, setCollapsed] = useState<boolean>(false)
@@ -56,13 +57,13 @@ const PageLayout: React.FC = (props: ObjectType) => {
         }
     }, [getMenu])
 
-    useMemo(() => {
+    useEffect(() => {
         // 如果没有token 未登录 跳转登录页面
         const token = getToken()
         if (!token) {
             history.push("/login")
         }
-    }, [getToken, history])
+    }, [])
 
     useEffect(() => {
         localStorage.setItem("lastUrl", location.pathname)
@@ -81,6 +82,11 @@ const PageLayout: React.FC = (props: ObjectType) => {
 
     //NOTE: 菜单点击设置路由key 跳转相应路由
     const menuClick = useCallback((e) => {
+        const user = getCurrentUser()
+        if (isEmpty(user)) {
+            history.push("/login")
+            return
+        }
         setKeyPath(() => e.keyPath)
         setCrumb(() => e.keyPath.reverse())
         setKey(() => e.key)
@@ -94,7 +100,7 @@ const PageLayout: React.FC = (props: ObjectType) => {
             { !isLoginPage && (
                 <>
                     {/*头部header*/}
-                    <Header className={styles.header}/>
+                    <Header />
                     <Layout className={styles.body}>
                         {/*左侧菜单*/}
                         <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>

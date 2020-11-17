@@ -31,13 +31,13 @@ const PowerManage:React.FC = () => {
             title: 'key',
             dataIndex: 'key',
             key: 'key',
-            width: 160
+            width: 140
         },
         {
             title: '链接',
             dataIndex: 'link',
             key: 'link',
-            width: 160
+            width: 120
         },
         {
             title: '图标',

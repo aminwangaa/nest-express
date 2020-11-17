@@ -12,7 +12,7 @@ const MenuForm = React.forwardRef((props: any, ref:any) => {
     TYPES.set(1, "菜单")
     TYPES.set(2, "功能")
 
-    const user = getCurrentUser()
+    const user = getCurrentUser() || {}
 
     const configs = [
         {
