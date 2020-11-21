@@ -89,7 +89,8 @@
   "scripts": {
     "start": "cross-env PORT=9090 node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -159,6 +160,17 @@
   "devDependencies": {
     "conventional-changelog-cli": "^2.1.1",
     "http-proxy-middleware": "^1.0.6",
+    "husky": "^4.3.0",
     "validate-commit-msg": "^2.14.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  },
+  "config": {
+    "ghooks": {
+      "commit-msg": "./validate-commit-msg.js"
+    }
   }
 }

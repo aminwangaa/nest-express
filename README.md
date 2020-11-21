@@ -1,44 +1,95 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目初始化
 
-## Available Scripts
+```
+$ npm init
+```
 
-In the project directory, you can run:
+##  git规范和changelog
 
-### `yarn start`
+编写指南  > http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+ - `commitizen`是一个格式化commit message的工具
+ - `validate-commit-msg` 用于检查项目的 Commit message 是否符合格式
+ - `conventional-changelog-cli`可以从git metadata生成变更日志
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+ 安装依赖
 
-### `yarn test`
+ `$ npm install -g commitizen`
+ `$ npm i  validate-commit-msg conventional-changelog-cli -D`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+初始化
+ `$ commitizen init cz-conventional-changelog --save --save-exact`
 
-### `yarn build`
+`$git add -A`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+提交git commit在命令行使用git cz代替
+`$ git cz`,按照提示选择
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+#### 提交的格式
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+<type>(<scope>):<subject/>
+<BLANK LINE>
+<body>a
+<BLANK LINE>
+<footer>
 
-### `yarn eject`
+type 代表某次提交的类型，比如是修复bug还是增加feature
+scope 表示作用域，比如一个页面或一个组件
+subject 主题 ，概述本次提交的内容
+body 详细的影响内容
+footer 修复的bug和issue链接
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### 类型的含义
+```
+feat	新增feature
+fix	修复bug
+docs	仅仅修改了文档，比如README、CHANGELOG、CONTRIBUTE等
+style	仅仅修改了空格、格式缩进、偏好等信息，不改变代码逻辑
+refactor	代码重构，没有新增功能或修复bug
+perf	优化相关，提升了性能和体验
+test	测试用例，包括单元测试和集成测试
+chore	改变构建流程，或者添加了依赖库和工具
+revert	回滚到上一个版本
+ci	CI 配置，脚本文件等更新
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### husky
 
-## Learn More
+ - `validate-commit-msg`可以来检查我们的commit规范
+ - `husky`可以把`validate-commit-msg`作为一个`githook`来验证提交消息
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+安装
+`$ npm i husky  --save-dev`
+
+修改package.json
+```json
+ "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-msg"
+    }
+  }
+  ```
+
+  ####  生成CHANGELOG.md
+
+`conventional-changelog-cli` 默认推荐的 commit 标准是来自angular项目
+参数`-i` CHANGELOG.md表示从 CHANGELOG.md 读取 changelog
+参数 `-s` 表示读写 CHANGELOG.md 为同一文件
+参数 `-r` 表示生成 changelog 所需要使用的 release 版本数量，默认为1，全部则是0
+
+`$ npm install -g conventional-changelog`
+
+```json
+{
+  "scripts": {
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0"
+  }
+}
+```
+
+`$ npm run changelog`
