@@ -1,7 +1,7 @@
 import React from "react"
 import useCounterModel from "../../models/counter";
 
-const Test:React.FC = () => {
+const Test = () => {
     const counter = useCounterModel()
     const { count, decrement, increment} = counter
 

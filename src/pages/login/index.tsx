@@ -34,7 +34,7 @@ const Login: React.FC = (props: any) => {
                     console.log(res.powerKeys.join("、"), "权限码")
                     setTimeout(() => {
                         history.push("/role")
-                    })
+                    }, 50)
                 }
             }
             if (type === 1) { // 注册
