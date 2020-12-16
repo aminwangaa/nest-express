@@ -18,7 +18,8 @@ const RouteList: React.FC = () =>  {
             <Route path="/power" component={PowerManage} />
             <Route path="/role" component={RoleManage} />
             <Route path="/user" component={User} />
-            <Route path="/login" component={Login} />
+            {/*<Route path="/login" component={Login} />*/}
+            <Route path="/login" render={(props) => <Login {...props} />} />
             <Redirect from="/" to="/login" />
             <Redirect from="/power" to="/power/menu" />
         </Switch>

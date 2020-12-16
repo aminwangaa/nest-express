@@ -17,8 +17,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "noImplicitAny": false,
     "jsx": "react",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "removeComments": true
   },
   "include": [
     "src"
