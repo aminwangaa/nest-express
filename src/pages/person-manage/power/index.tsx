@@ -87,7 +87,7 @@ const PowerManage:React.FC = () => {
         setVisible(flag => !flag)
     }
 
-    const handleSubmit = useCallback(async () => {
+    const handleSubmit = async () => {
         const params = await formRef.current!.handleSubmit()
         if (params) {
             await createPower(params)
@@ -96,7 +96,7 @@ const PowerManage:React.FC = () => {
             await getPowerList()
         }
 
-    }, [formRef, createPower])
+    }
 
     const getPowerList = useCallback(async () => {
         // 处理参数

@@ -23,7 +23,7 @@ const useGetPageInfo = (initPage: number = 1, initPageSize: number = 20) => {
     }
 }
 type UserGetDataParams = {
-    getData: (params: CommonObj) => infer R
+    getData: (params: CommonObj) => void
     params: CommonObj
 }
 
